@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300&display=swap');
+
+:root {
+    --background: #0c3200;
+    --background-claro: #006940;
+    --seleccion: #ff4850;
+    --boton: #ffc13f;
+    --letra: #ffff82;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--background);
+}
+
+#seleccionar-mascota {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.titulo {
+    color: var(--letra);
+    font-size: 32px;
+    font-family: 'Fredoka One', cursive;
+}
+
+.subtitulo {
+    color: var(--letra);
+    font-size: 20px;
+}
+
+.contenedor-batalla {
+    display: flex;
+    align-items: center;
+}
+
+.contenedor-batalla .contenedor-pokemon-jugador img {
+    margin-right: 50px;
+    margin-left: 20px;
+}
+
+.contenedor-batalla .contenedor-pokemon-enemigo img {
+    margin-left: 50px;
+    margin-right: 20px;
+}
+
+.contenedor-batalla h2 {
+    color: var(--seleccion);
+}
+
+.contenedor-pokemon-jugador, .contenedor-pokemon-enemigo {
+    display: flex;
+    align-items: center;
+}
+
+.tarjetas, .tarjetas-ataques {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tarjetas-ataques {
+    width: 200px;
+}
+
+.tarjeta-de-mokepon {
+    width: 200px;
+    height: 100px;
+    background-color: var(--background-claro);
+    box-sizing: border-box;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--letra);
+}
+
+.tarjeta-de-mokepon:hover, #boton-mascota:hover, .boton-de-ataque:hover {
+    background-color: var(--seleccion);
+}
+
+.tarjeta-de-mokepon img {
+    width: 80px;
+}
+
+#boton-mascota {
+    width: 180px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 2px solid var(--letra);
+    color: var(--letra);
+    font-family: 'Poppins', sans-serif;
+    margin-top: 30px;
+}
+
+input {
+    display: none;
+}
+
+input:checked + label {
+    background-color: var(--seleccion);
+}
+
+#seleccionar-ataque {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boton-de-ataque {
+    background-color: var(--background-claro);
+    color: var(--letra);
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    border-color: transparent;
+    width: 80px;
+    font-family: 'Poppins', sans-serif;
+}
+
+#contenedor-imagenes-pokemon img {
+    width: 100%;
+}
+
+#mensajes {
+    width: 280px;
+    margin-top: 20px;
+    background: var(--seleccion);
+    padding: 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#boton-reiniciar {
+    border: none;
+    background: var(--seleccion);
+    font-family: 'Poppins', sans-serif;
+}
+
+.ataques {
+    display: grid;
+    grid-template-columns: 250px 250px;
+    color: var(--letra);
+}
+
+#vidas-jugador, #vidas-enemigo {
+    font-size: 32px;
+    margin-bottom: 0;
+}
+
+.ataques-jugador, .ataques-enemigo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 360px) {
+    .tarjetas, .tarjetas-ataques {
+        flex-direction: column;
+    }
+}
