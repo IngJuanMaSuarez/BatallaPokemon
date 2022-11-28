@@ -160,8 +160,12 @@ input:checked + label {
     align-items: center;
 }
 
-@media (max-width: 360px) {
+@media (max-width: 450px) {
     .tarjetas, .tarjetas-ataques {
+        flex-direction: row;
+    }
+
+    .contenedor-batalla {
         flex-direction: column;
     }
 }
