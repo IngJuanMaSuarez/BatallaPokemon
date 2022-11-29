@@ -1,24 +1,24 @@
-const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+const sectionSeleccionarMascota = document.getElementById('seleccionar-mascota')
 const botonMascotaJugador = document.getElementById('boton-mascota')
+const spanMascotaJugador = document.getElementById('mascota-jugador')
+const spanMascotaEnemigo = document.getElementById('mascota-enemigo')
 
+const sectionSeleccionarAtaque = document.getElementById('seleccionar-ataque')
+const contenedorTarjetas = document.getElementById('contenedorTarjetas')
+const contenedorAtaquesJugador = document.getElementById('contenedorAtaquesJugador')
+const ataquesDelJugador = document.getElementById('ataques-del-jugador')
+const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
+const imagenPokemonJugador = document.getElementById('imagen-pokemon-jugador')
+const imagenPokemonEnemigo = document.getElementById('imagen-pokemon-enemigo')
+
+const spanVidasJugador = document.getElementById('vidas-jugador')
+const spanVidasEnemigo = document.getElementById('vidas-enemigo')
 const sectionMensajes = document.getElementById('resultado')
 const sectionReiniciar = document.getElementById('reiniciar')
 const botonReiniciar = document.getElementById('boton-reiniciar')
 
-const sectionSeleccionarMascota = document.getElementById('seleccionar-mascota')
-const spanMascotaJugador = document.getElementById('mascota-jugador')
-
-const spanMascotaEnemigo = document.getElementById('mascota-enemigo')
-
-const spanVidasJugador = document.getElementById('vidas-jugador')
-const spanVidasEnemigo = document.getElementById('vidas-enemigo')
-
-const ataquesDelJugador = document.getElementById('ataques-del-jugador')
-const ataquesDelEnemigo = document.getElementById('ataques-del-enemigo')
-const contenedorTarjetas = document.getElementById('contenedorTarjetas')
-const contenedorAtaquesJugador = document.getElementById('contenedorAtaquesJugador')
-const imagenPokemonJugador = document.getElementById('imagen-pokemon-jugador')
-const imagenPokemonEnemigo = document.getElementById('imagen-pokemon-enemigo')
+const sectionVerMapa = document.getElementById('ver-mapa')
+const mapa = document.getElementById('mapa')
 
 let mokepones = []
 let ataqueJugador = []
@@ -36,11 +36,15 @@ let indexAtaqueJugador
 let indexAtaqueEnemigo
 let tipoMokemonEnemigo
 let mascotaAleatoria
+let mapaBackground = new Image()
+mapaBackground.src = '../assets/mokemap.png'
 
 let victoriasJugador = 0
 let victoriasEnemigo = 0
 let vidasJugador = 3
 let vidasEnemigo = 3
+let lienzo = mapa.getContext('2d')
+let intervalo
 
 class Mokepon {
     constructor(nombre, foto, vida, tipo) {
@@ -49,6 +53,14 @@ class Mokepon {
         this.vida = vida
         this.ataques = []
         this.tipo = tipo
+        this.x = 20
+        this.y = 30
+        this.ancho = 80
+        this.alto = 80
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
 }
 
@@ -110,8 +122,10 @@ growlithe.ataques.push(
 mokepones.push(squirtle, bulbasaur, charmander, poliwag, oddish, growlithe)
 
 function iniciarJuego(){
+
     sectionSeleccionarAtaque.style.display = 'none'
     sectionReiniciar.style.display = 'none'
+    sectionVerMapa.style.display = 'none'
 
     mokepones.forEach((mokepon) => {
         opcionDeMokepones = `
@@ -136,6 +150,7 @@ function iniciarJuego(){
 }
 
 function seleccionarMascotaJugador() {
+
     sectionSeleccionarMascota.style.display = 'none'
     sectionSeleccionarAtaque.style.display = 'flex'
 
@@ -167,6 +182,8 @@ function seleccionarMascotaJugador() {
         }
     }
 
+    sectionVerMapa.style.display = 'flex'
+    iniciarMapa()
     seleccionarMascotaEnemigo()
 }
 
@@ -340,6 +357,75 @@ function reiniciarJuego() {
 
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function pintarCanvas(){
+    mascotaJugador.x = mascotaJugador.x + mascotaJugador.velocidadX
+    mascotaJugador.y = mascotaJugador.y + mascotaJugador.velocidadY
+    lienzo.clearRect(0, 0, mapa.width, mapa.height)
+    lienzo.drawImage(
+        mapaBackground,
+        0,
+        0,
+        mapa.width,
+        mapa.height
+    )
+    lienzo.drawImage(
+        mascotaJugador.mapaFoto,
+        mascotaJugador.x,
+        mascotaJugador.y,
+        mascotaJugador.alto, 
+        mascotaJugador.ancho
+    )
+}
+
+function moverArriba(){
+    mascotaJugador.velocidadY = -5
+}
+
+function moverIzquierda(){
+    mascotaJugador.velocidadX = -5
+}
+
+function moverAbajo(){
+    mascotaJugador.velocidadY = 5
+}
+
+function moverDerecha(){
+    mascotaJugador.velocidadX = 5
+}
+
+function detenerMovimiento(){
+    mascotaJugador.velocidadX = 0
+    mascotaJugador.velocidadY = 0
+}
+
+function sePresionoUnaTecla(event){
+    switch (event.key) {
+        case 'ArrowUp':
+            moverArriba()
+            break
+        case 'ArrowDown':
+            moverAbajo()
+            break
+        case 'ArrowLeft':
+            moverIzquierda()
+            break
+        case 'ArrowRight':
+            moverDerecha()
+            break
+        default:
+            break
+    }
+}
+
+function iniciarMapa(){
+    mapa.width = 320
+    mapa.height = 240
+    intervalo = setInterval(pintarCanvas, 50)
+
+    window.addEventListener('keydown', sePresionoUnaTecla)
+    window.addEventListener('keyup', detenerMovimiento)
 }
 
 window.addEventListener('load', iniciarJuego)

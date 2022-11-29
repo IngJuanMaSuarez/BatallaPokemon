@@ -160,6 +160,17 @@ input:checked + label {
     align-items: center;
 }
 
+#ver-mapa {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#mapa {
+    background-color: var(--background-claro);
+    border: 2px solid var(--seleccion);
+}
+
 @media (max-width: 450px) {
     .tarjetas, .tarjetas-ataques {
         flex-direction: row;
