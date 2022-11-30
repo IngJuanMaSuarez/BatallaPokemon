@@ -93,6 +93,14 @@ squirtle.ataques.push(
     { nombre: '🌱', id: 'boton-planta'}
 )
 
+squirtleEnemigo.ataques.push(
+    { nombre: '💧', id: 'boton-agua'},
+    { nombre: '💧', id: 'boton-agua'},
+    { nombre: '💧', id: 'boton-agua'},
+    { nombre: '🔥', id: 'boton-fuego'},
+    { nombre: '🌱', id: 'boton-planta'}
+)
+
 bulbasaur.ataques.push(
     { nombre: '🌱', id: 'boton-planta'},
     { nombre: '🌱', id: 'boton-planta'},
@@ -101,7 +109,23 @@ bulbasaur.ataques.push(
     { nombre: '🔥', id: 'boton-fuego'},
 )
 
+bulbasaurEnemigo.ataques.push(
+    { nombre: '🌱', id: 'boton-planta'},
+    { nombre: '🌱', id: 'boton-planta'},
+    { nombre: '🌱', id: 'boton-planta'},
+    { nombre: '💧', id: 'boton-agua'},
+    { nombre: '🔥', id: 'boton-fuego'},
+)
+
 charmander.ataques.push(
+    { nombre: '🔥', id: 'boton-fuego'},
+    { nombre: '🔥', id: 'boton-fuego'},
+    { nombre: '🔥', id: 'boton-fuego'},
+    { nombre: '💧', id: 'boton-agua'},
+    { nombre: '🌱', id: 'boton-planta'}
+)
+
+charmanderEnemigo.ataques.push(
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
@@ -166,7 +190,6 @@ function iniciarJuego(){
 function seleccionarMascotaJugador() {
 
     sectionSeleccionarMascota.style.display = 'none'
-    sectionSeleccionarAtaque.style.display = 'flex'
 
     if (inputSquirtle.checked) {
         spanMascotaJugador.innerHTML = inputSquirtle.id
@@ -198,13 +221,11 @@ function seleccionarMascotaJugador() {
 
     sectionVerMapa.style.display = 'flex'
     iniciarMapa()
-    seleccionarMascotaEnemigo()
 }
 
-function seleccionarMascotaEnemigo() {
-    mascotaAleatoria = aleatorio(0, mokepones.length - 1)
+function seleccionarMascotaEnemigo(enemigo) {
 
-    mascotaEnemigo = mokepones[mascotaAleatoria]
+    mascotaEnemigo = enemigo
     spanMascotaEnemigo.innerHTML = mascotaEnemigo.nombre
 
     extraerAtaques()
@@ -343,7 +364,7 @@ function crearMensaje() {
     let nuevoAtaqueDelJugador = document.createElement('p')
     let nuevoAtaqueDelEnemigo = document.createElement('p')
     
-    nuevoAtaqueDelJugador.innerHTML = "Atacas al rival con " + indexAtaqueJugador.toLowerCase()
+    nuevoAtaqueDelJugador.innerHTML = "Atacas con " + indexAtaqueJugador.toLowerCase()
     nuevoAtaqueDelEnemigo.innerHTML = "Tu rival ataca con " + indexAtaqueEnemigo.toLowerCase()
 
     ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
@@ -466,7 +487,10 @@ function revisarColision(enemigo){
     }
     
     detenerMovimiento()
-    alert('Hay colision ' + enemigo.nombre)
+    clearInterval(intervalo)
+    sectionSeleccionarAtaque.style.display = 'flex'
+    sectionVerMapa.style.display = 'none'
+    seleccionarMascotaEnemigo(enemigo)
 }
 
 window.addEventListener('load', iniciarJuego)
