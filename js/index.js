@@ -38,6 +38,18 @@ let tipoMokemonEnemigo
 let mascotaAleatoria
 let mapaBackground = new Image()
 mapaBackground.src = './assets/mokemap.png'
+let alturaQueBuscamos
+let anchoDelMapa = window.innerWidth - 20
+const anchoMaximoMapa = 350
+
+if(anchoDelMapa > anchoMaximoMapa){
+    anchoDelMapa = anchoMaximoMapa - 20
+}
+
+alturaQueBuscamos = anchoDelMapa * 600 / 800
+
+mapa.width = anchoDelMapa
+mapa.height = alturaQueBuscamos
 
 let victoriasJugador = 0
 let victoriasEnemigo = 0
@@ -47,18 +59,18 @@ let lienzo = mapa.getContext('2d')
 let intervalo
 
 class Mokepon {
-    constructor(nombre, foto, vida, tipo, fotoMapa, x = 10, y = 10) {
+    constructor(nombre, foto, vida, tipo, fotoMapa) {
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
         this.ataques = []
+        this.ancho = 40
+        this.alto = 40
         this.tipo = tipo
         this.mapaFoto = new Image()
         this.mapaFoto.src = fotoMapa
-        this.x = x
-        this.y = y
-        this.ancho = 40
-        this.alto = 40
+        this.x = aleatorio(0, mapa.width - this.ancho)
+        this.y = aleatorio(0, mapa.height- this.alto)
         this.velocidadX = 0
         this.velocidadY = 0
     }
@@ -81,9 +93,9 @@ let poliwag = new Mokepon('Poliwag', './assets/poliwag.png', 5, 'AGUA', './asset
 let oddish = new Mokepon('Oddish', './assets/oddish.png', 5, 'PLANTA', './assets/oddish.png')
 let growlithe = new Mokepon('Growlithe', './assets/growlithe.png', 5, 'FUEGO', './assets/growlithe.png')
 
-let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png', 80, 120)
-let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png', 150, 95)
-let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png', 200, 190)
+let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
+let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
+let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
 
 squirtle.ataques.push(
     { nombre: '💧', id: 'boton-agua'},
@@ -458,10 +470,7 @@ function sePresionoUnaTecla(event){
 }
 
 function iniciarMapa(){
-    mapa.width = 320
-    mapa.height = 240
     intervalo = setInterval(pintarCanvas, 50)
-
     window.addEventListener('keydown', sePresionoUnaTecla)
     window.addEventListener('keyup', detenerMovimiento)
 }
