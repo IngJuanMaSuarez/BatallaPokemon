@@ -177,6 +177,10 @@ input:checked + label {
     margin: 10px 0;
 }
 
+#ver-mapa button:hover {
+    background-color: var(--seleccion);
+}
+
 @media (max-width: 560px) {
     .tarjetas, .tarjetas-ataques {
         flex-direction: row;
