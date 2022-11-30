@@ -37,7 +37,7 @@ let indexAtaqueEnemigo
 let tipoMokemonEnemigo
 let mascotaAleatoria
 let mapaBackground = new Image()
-mapaBackground.src = '../assets/mokemap.png'
+mapaBackground.src = './assets/mokemap.png'
 
 let victoriasJugador = 0
 let victoriasEnemigo = 0
