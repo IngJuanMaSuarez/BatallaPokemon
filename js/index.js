@@ -47,29 +47,43 @@ let lienzo = mapa.getContext('2d')
 let intervalo
 
 class Mokepon {
-    constructor(nombre, foto, vida, tipo) {
+    constructor(nombre, foto, vida, tipo, fotoMapa, x = 10, y = 10) {
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
         this.ataques = []
         this.tipo = tipo
-        this.x = 20
-        this.y = 30
-        this.ancho = 80
-        this.alto = 80
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
+        this.x = x
+        this.y = y
+        this.ancho = 40
+        this.alto = 40
         this.velocidadX = 0
         this.velocidadY = 0
     }
+
+    pintarPokemon() {
+        lienzo.drawImage(
+            this.mapaFoto,
+            this.x,
+            this.y,
+            this.alto, 
+            this.ancho
+        )
+    }
 }
 
-let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA')
-let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA')
-let charmander = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO')
-let poliwag = new Mokepon('Poliwag', './assets/poliwag.png', 5, 'AGUA')
-let oddish = new Mokepon('Oddish', './assets/oddish.png', 5, 'PLANTA')
-let growlithe = new Mokepon('Growlithe', './assets/growlithe.png', 5, 'FUEGO')
+let squirtle = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
+let bulbasaur = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
+let charmander = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
+let poliwag = new Mokepon('Poliwag', './assets/poliwag.png', 5, 'AGUA', './assets/poliwag.png')
+let oddish = new Mokepon('Oddish', './assets/oddish.png', 5, 'PLANTA', './assets/oddish.png')
+let growlithe = new Mokepon('Growlithe', './assets/growlithe.png', 5, 'FUEGO', './assets/growlithe.png')
+
+let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png', 80, 120)
+let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png', 150, 95)
+let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png', 200, 190)
 
 squirtle.ataques.push(
     { nombre: '💧', id: 'boton-agua'},
@@ -370,13 +384,16 @@ function pintarCanvas(){
         mapa.width,
         mapa.height
     )
-    lienzo.drawImage(
-        mascotaJugador.mapaFoto,
-        mascotaJugador.x,
-        mascotaJugador.y,
-        mascotaJugador.alto, 
-        mascotaJugador.ancho
-    )
+    mascotaJugador.pintarPokemon()
+    squirtleEnemigo.pintarPokemon()
+    bulbasaurEnemigo.pintarPokemon()
+    charmanderEnemigo.pintarPokemon()
+
+    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
+        revisarColision(squirtleEnemigo)
+        revisarColision(bulbasaurEnemigo)
+        revisarColision(charmanderEnemigo)
+    }
 }
 
 function moverArriba(){
@@ -426,6 +443,30 @@ function iniciarMapa(){
 
     window.addEventListener('keydown', sePresionoUnaTecla)
     window.addEventListener('keyup', detenerMovimiento)
+}
+
+function revisarColision(enemigo){
+    const arribaEnemigo = enemigo.y
+    const abajoEnemigo = enemigo.y + enemigo.alto
+    const derechaEnemigo = enemigo.x + enemigo.ancho
+    const izquierdaEnemigo = enemigo.x
+
+    const arribaMascota = mascotaJugador.y
+    const abajoMascota = mascotaJugador.y + enemigo.alto
+    const derechaMascota = mascotaJugador.x + enemigo.ancho
+    const izquierdaMascota = mascotaJugador.x
+
+    if (
+        abajoMascota < arribaEnemigo ||
+        arribaMascota > abajoEnemigo ||
+        derechaMascota < izquierdaEnemigo ||
+        izquierdaMascota > derechaEnemigo
+    ) {
+        return 
+    }
+    
+    detenerMovimiento()
+    alert('Hay colision ' + enemigo.nombre)
 }
 
 window.addEventListener('load', iniciarJuego)
