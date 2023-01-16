@@ -447,6 +447,9 @@ function pintarCanvas(){
         mapa.height
     )
     mascotaJugador.pintarPokemon()
+
+    enviarPosicion(mascotaJugador.x, mascotaJugador.y)
+
     squirtleEnemigo.pintarPokemon()
     bulbasaurEnemigo.pintarPokemon()
     charmanderEnemigo.pintarPokemon()
@@ -456,6 +459,19 @@ function pintarCanvas(){
         revisarColision(bulbasaurEnemigo)
         revisarColision(charmanderEnemigo)
     }
+}
+
+function enviarPosicion(x, y) {
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/posicion`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            x,
+            y
+        })
+    })
 }
 
 function moverArriba(){
