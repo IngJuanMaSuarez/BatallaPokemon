@@ -208,7 +208,7 @@ function unirseAlJuego() {
                 res.text()
                     .then(function(respuesta) {
                         console.log(respuesta)
-                        jugadorID = respuesta
+                        jugadorId = respuesta
                     })
             }
         })
@@ -253,8 +253,6 @@ function seleccionarMascotaJugador() {
 }
 
 function seleccionarMokepon(mascotaJugador) {
-    console.log("dentro de seleccionarMokepon")
-    console.log(mascotaJugador)
     fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
