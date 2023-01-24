@@ -22,6 +22,7 @@ const mapa = document.getElementById('mapa')
 
 let jugadorId = null
 let mokepones = []
+let mokeponesEnemigos = []
 let ataqueJugador = []
 let ataqueEnemigo = []
 let botones = []
@@ -432,15 +433,15 @@ function pintarCanvas(){
 
     enviarPosicion(mascotaJugador.x, mascotaJugador.y)
 
-    // squirtleEnemigo.pintarPokemon()
-    // bulbasaurEnemigo.pintarPokemon()
-    // charmanderEnemigo.pintarPokemon()
+    mokeponesEnemigos.forEach(function (mokepon) {
+        mokepon.pintarPokemon()
+    })
 
-    // if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
-    //     revisarColision(squirtleEnemigo)
-    //     revisarColision(bulbasaurEnemigo)
-    //     revisarColision(charmanderEnemigo)
-    // }
+    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
+        revisarColision(squirtleEnemigo)
+        revisarColision(bulbasaurEnemigo)
+        revisarColision(charmanderEnemigo)
+    }
 }
 
 function enviarPosicion(x, y) {
@@ -458,31 +459,23 @@ function enviarPosicion(x, y) {
         if (res.ok) {
             res.json()
                 .then(function ({ enemigos }){
-                    console.log(enemigos)
-                    enemigos.forEach(function (enemigo) {
+                    console.log("Lista de enemigos ", enemigos) 
+                    mokeponesEnemigos = enemigos.map(function (enemigo) {
+                        const mokeponNombre = enemigo.mokepon.nombre || ""
                         let mokeponEnemigo = null
-                        if (enemigo.mokepon != undefined){
-                            const mokeponNombre = enemigo.mokepon.nombre || ""
-                            if (mokeponNombre === "Squirtle"){
-                                let mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
-                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
-                            } else if (mokeponNombre === "Bulbasaur") {
-                                let mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
-                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
-                            } else if (mokeponNombre === "Charmander") {
-                                let mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
-                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
-                            }
-                            
-                            console.log("Mokepon Nombre Despues del IF", mokeponNombre)
-                            console.log("Mokepon Enemigo Despues del IF", mokeponEnemigo)
-                            
-                            mokeponEnemigo.x = enemigo.x
-                            mokeponEnemigo.y = enemigo.y
-                            
-                            mokeponEnemigo.pintarPokemon()
+                        if (mokeponNombre === "Squirtle"){
+                            mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
+                        } else if (mokeponNombre === "Bulbasaur") {
+                            mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
+                        } else if (mokeponNombre === "Charmander") {
+                            mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
                         }
 
+                        // console.log(mokeponEnemigo)
+                        mokeponEnemigo.x = enemigo.x
+                        mokeponEnemigo.y = enemigo.y
+                        
+                        return mokeponEnemigo
                     })
                 })
         }
