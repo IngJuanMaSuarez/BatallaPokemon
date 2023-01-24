@@ -105,7 +105,6 @@ const SQUIRTLE_ATAQUES = [
 ]
 
 squirtle.ataques.push(...SQUIRTLE_ATAQUES)
-// squirtleEnemigo.ataques.push(...SQUIRTLE_ATAQUES)
 
 const BULBASAUR_ATAQUES = [
     { nombre: '🌱', id: 'boton-planta'},
@@ -116,7 +115,6 @@ const BULBASAUR_ATAQUES = [
 ]
 
 bulbasaur.ataques.push(...BULBASAUR_ATAQUES)
-// bulbasaurEnemigo.ataques.push(...BULBASAUR_ATAQUES)
 
 const CHARMANDER_ATAQUES = [
     { nombre: '🔥', id: 'boton-fuego'},
@@ -127,7 +125,6 @@ const CHARMANDER_ATAQUES = [
 ]
 
 charmander.ataques.push(...CHARMANDER_ATAQUES)
-// charmanderEnemigo.ataques.push(...CHARMANDER_ATAQUES)
 
 poliwag.ataques.push(
     { nombre: '💧', id: 'boton-agua'},
@@ -185,7 +182,7 @@ function iniciarJuego(){
 }
 
 function unirseAlJuego() {
-    fetch("http://localhost:8080/unirse")
+    fetch("http://192.168.0.20:8080/unirse")
         .then(function(res) {
             if (res.ok) {
                 res.text()
@@ -198,8 +195,6 @@ function unirseAlJuego() {
 }
 
 function seleccionarMascotaJugador() {
-
-    sectionSeleccionarMascota.style.display = 'none'
 
     if (inputSquirtle.checked) {
         spanMascotaJugador.innerHTML = inputSquirtle.id
@@ -221,8 +216,10 @@ function seleccionarMascotaJugador() {
         nombreMascotaJugador = inputGrowlithe.id
     } else {
         alert("Selecciona una mascota")
-        location.reload()
+        return
     }
+
+    sectionSeleccionarMascota.style.display = 'none'
 
     for (let i = 0; i < mokepones.length; i++) {
         if (nombreMascotaJugador === mokepones[i].nombre) {
@@ -236,7 +233,7 @@ function seleccionarMascotaJugador() {
 }
 
 function seleccionarMokepon(mascotaJugador) {
-    fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
+    fetch(`http://192.168.0.20:8080/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -445,7 +442,7 @@ function pintarCanvas(){
 }
 
 function enviarPosicion(x, y) {
-    fetch(`http://localhost:8080/mokepon/${jugadorId}/posicion`, {
+    fetch(`http://192.168.0.20:8080/mokepon/${jugadorId}/posicion`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
