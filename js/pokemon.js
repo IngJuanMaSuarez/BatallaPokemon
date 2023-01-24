@@ -60,7 +60,8 @@ let lienzo = mapa.getContext('2d')
 let intervalo
 
 class Mokepon {
-    constructor(nombre, foto, vida, tipo, fotoMapa) {
+    constructor(nombre, foto, vida, tipo, fotoMapa, id = null) {
+        this.id = id
         this.nombre = nombre
         this.foto = foto
         this.vida = vida
@@ -94,57 +95,38 @@ let poliwag = new Mokepon('Poliwag', './assets/poliwag.png', 5, 'AGUA', './asset
 let oddish = new Mokepon('Oddish', './assets/oddish.png', 5, 'PLANTA', './assets/oddish.png')
 let growlithe = new Mokepon('Growlithe', './assets/growlithe.png', 5, 'FUEGO', './assets/growlithe.png')
 
-let squirtleEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
-let bulbasaurEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
-let charmanderEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
-
-squirtle.ataques.push(
+const SQUIRTLE_ATAQUES = [
     { nombre: '💧', id: 'boton-agua'},
     { nombre: '💧', id: 'boton-agua'},
     { nombre: '💧', id: 'boton-agua'},
     { nombre: '🔥', id: 'boton-fuego'},
-    { nombre: '🌱', id: 'boton-planta'}
-)
+    { nombre: '🌱', id: 'boton-planta'},
+]
 
-squirtleEnemigo.ataques.push(
-    { nombre: '💧', id: 'boton-agua'},
-    { nombre: '💧', id: 'boton-agua'},
-    { nombre: '💧', id: 'boton-agua'},
-    { nombre: '🔥', id: 'boton-fuego'},
-    { nombre: '🌱', id: 'boton-planta'}
-)
+squirtle.ataques.push(...SQUIRTLE_ATAQUES)
+// squirtleEnemigo.ataques.push(...SQUIRTLE_ATAQUES)
 
-bulbasaur.ataques.push(
+const BULBASAUR_ATAQUES = [
     { nombre: '🌱', id: 'boton-planta'},
     { nombre: '🌱', id: 'boton-planta'},
     { nombre: '🌱', id: 'boton-planta'},
     { nombre: '💧', id: 'boton-agua'},
     { nombre: '🔥', id: 'boton-fuego'},
-)
+]
 
-bulbasaurEnemigo.ataques.push(
-    { nombre: '🌱', id: 'boton-planta'},
-    { nombre: '🌱', id: 'boton-planta'},
-    { nombre: '🌱', id: 'boton-planta'},
-    { nombre: '💧', id: 'boton-agua'},
-    { nombre: '🔥', id: 'boton-fuego'},
-)
+bulbasaur.ataques.push(...BULBASAUR_ATAQUES)
+// bulbasaurEnemigo.ataques.push(...BULBASAUR_ATAQUES)
 
-charmander.ataques.push(
+const CHARMANDER_ATAQUES = [
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '💧', id: 'boton-agua'},
-    { nombre: '🌱', id: 'boton-planta'}
-)
+    { nombre: '🌱', id: 'boton-planta'},
+]
 
-charmanderEnemigo.ataques.push(
-    { nombre: '🔥', id: 'boton-fuego'},
-    { nombre: '🔥', id: 'boton-fuego'},
-    { nombre: '🔥', id: 'boton-fuego'},
-    { nombre: '💧', id: 'boton-agua'},
-    { nombre: '🌱', id: 'boton-planta'}
-)
+charmander.ataques.push(...CHARMANDER_ATAQUES)
+// charmanderEnemigo.ataques.push(...CHARMANDER_ATAQUES)
 
 poliwag.ataques.push(
     { nombre: '💧', id: 'boton-agua'},
@@ -450,15 +432,15 @@ function pintarCanvas(){
 
     enviarPosicion(mascotaJugador.x, mascotaJugador.y)
 
-    squirtleEnemigo.pintarPokemon()
-    bulbasaurEnemigo.pintarPokemon()
-    charmanderEnemigo.pintarPokemon()
+    // squirtleEnemigo.pintarPokemon()
+    // bulbasaurEnemigo.pintarPokemon()
+    // charmanderEnemigo.pintarPokemon()
 
-    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
-        revisarColision(squirtleEnemigo)
-        revisarColision(bulbasaurEnemigo)
-        revisarColision(charmanderEnemigo)
-    }
+    // if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
+    //     revisarColision(squirtleEnemigo)
+    //     revisarColision(bulbasaurEnemigo)
+    //     revisarColision(charmanderEnemigo)
+    // }
 }
 
 function enviarPosicion(x, y) {
@@ -471,6 +453,39 @@ function enviarPosicion(x, y) {
             x,
             y
         })
+    })
+    .then(function (res) {
+        if (res.ok) {
+            res.json()
+                .then(function ({ enemigos }){
+                    console.log(enemigos)
+                    enemigos.forEach(function (enemigo) {
+                        let mokeponEnemigo = null
+                        if (enemigo.mokepon != undefined){
+                            const mokeponNombre = enemigo.mokepon.nombre || ""
+                            if (mokeponNombre === "Squirtle"){
+                                let mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
+                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
+                            } else if (mokeponNombre === "Bulbasaur") {
+                                let mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
+                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
+                            } else if (mokeponNombre === "Charmander") {
+                                let mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
+                                console.log("Mokepon Enemigo Dentro del IF", mokeponEnemigo)
+                            }
+                            
+                            console.log("Mokepon Nombre Despues del IF", mokeponNombre)
+                            console.log("Mokepon Enemigo Despues del IF", mokeponEnemigo)
+                            
+                            mokeponEnemigo.x = enemigo.x
+                            mokeponEnemigo.y = enemigo.y
+                            
+                            mokeponEnemigo.pintarPokemon()
+                        }
+
+                    })
+                })
+        }
     })
 }
 
