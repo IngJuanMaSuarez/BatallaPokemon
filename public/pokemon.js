@@ -182,7 +182,7 @@ function iniciarJuego(){
 }
 
 function unirseAlJuego() {
-    fetch("http://192.168.0.20:8080/unirse")
+    fetch("https://batalla-pokemon-backend.vercel.app/unirse")
         .then(function(res) {
             if (res.ok) {
                 res.text()
@@ -233,7 +233,7 @@ function seleccionarMascotaJugador() {
 }
 
 function seleccionarMokepon(mascotaJugador) {
-    fetch(`http://192.168.0.20:8080/mokepon/${jugadorId}`, {
+    fetch(`https://batalla-pokemon-backend.vercel.app/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -442,7 +442,7 @@ function pintarCanvas(){
 }
 
 function enviarPosicion(x, y) {
-    fetch(`http://192.168.0.20:8080/mokepon/${jugadorId}/posicion`, {
+    fetch(`https://batalla-pokemon-backend.vercel.app/mokepon/${jugadorId}/posicion`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
