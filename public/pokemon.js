@@ -21,6 +21,7 @@ const sectionVerMapa = document.getElementById('ver-mapa')
 const mapa = document.getElementById('mapa')
 
 let jugadorId = null
+let enemigoId = null
 let mokepones = []
 let mokeponesEnemigos = []
 let ataqueJugador = []
@@ -182,7 +183,7 @@ function iniciarJuego(){
 }
 
 function unirseAlJuego() {
-    fetch("https://batalla-pokemon-backend.vercel.app/unirse")
+    fetch("http://192.168.0.20:4000/unirse")
         .then(function(res) {
             if (res.ok) {
                 res.text()
@@ -233,7 +234,7 @@ function seleccionarMascotaJugador() {
 }
 
 function seleccionarMokepon(mascotaJugador) {
-    fetch(`https://batalla-pokemon-backend.vercel.app/mokepon/${jugadorId}`, {
+    fetch(`http://192.168.0.20:4000/mokepon/${jugadorId}`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -294,7 +295,7 @@ function mostrarAtaques(ataquesJugador, ataquesEnemigo){
     botonesRival = document.querySelectorAll('.boton-rival')
     botonesRival.forEach((botonRival) => {
         botonRival.style.background = 'var(--background)'
-        botonRival.disabled = true
+        botonRival.disabled = false
         botonRival.style.border = '2px solid var(--background-claro)'               
     })
 
@@ -320,9 +321,39 @@ function secuenciaAtaque(){
                 boton.disabled = true
                 boton.style.border = '2px solid var(--background-claro)'
             }
-            ataqueAleatorioEnemigo()
+            if (ataqueJugador.length === 5){
+                enviarAtaques()
+            }
         })
     })
+}
+
+function enviarAtaques(){
+    fetch(`http://192.168.0.20:4000/mokepon/${jugadorId}/ataques`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            ataques: ataqueJugador
+        })
+    })
+    intervalo = setInterval(obtenerAtaques, 50)
+}
+
+function obtenerAtaques() {
+    fetch(`http://192.168.0.20:4000/mokepon/${enemigoId}/ataques`)
+        .then(function (res) {
+            if (res.ok) {
+                res.json()
+                    .then(function({ ataques }) {
+                        if (ataques.length === 5) {
+                            ataqueEnemigo = ataques
+                            combate()
+                        }
+                    })
+            }
+        })
 }
 
 function ataqueAleatorioEnemigo() {
@@ -343,6 +374,7 @@ function ataqueAleatorioEnemigo() {
 }
 
 function combate() {
+    clearInterval(intervalo)
 
     index = ataqueJugador.length - 1
 
@@ -432,17 +464,12 @@ function pintarCanvas(){
 
     mokeponesEnemigos.forEach(function (mokepon) {
         mokepon.pintarPokemon()
+        revisarColision(mokepon)
     })
-
-    if (mascotaJugador.velocidadX !== 0 || mascotaJugador.velocidadY !== 0) {
-        revisarColision(squirtleEnemigo)
-        revisarColision(bulbasaurEnemigo)
-        revisarColision(charmanderEnemigo)
-    }
 }
 
 function enviarPosicion(x, y) {
-    fetch(`https://batalla-pokemon-backend.vercel.app/mokepon/${jugadorId}/posicion`, {
+    fetch(`http://192.168.0.20:4000/mokepon/${jugadorId}/posicion`, {
         method: "post",
         headers: {
             "Content-Type": "application/json"
@@ -461,14 +488,13 @@ function enviarPosicion(x, y) {
                         const mokeponNombre = enemigo.mokepon.nombre || ""
                         let mokeponEnemigo = null
                         if (mokeponNombre === "Squirtle"){
-                            mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png')
+                            mokeponEnemigo = new Mokepon('Squirtle', './assets/squirtle.png', 5, 'AGUA', './assets/squirtle.png', enemigo.id)
                         } else if (mokeponNombre === "Bulbasaur") {
-                            mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png')
+                            mokeponEnemigo = new Mokepon('Bulbasaur', './assets/bulbasaur.png', 5, 'PLANTA', './assets/bulbasaur.png', enemigo.id)
                         } else if (mokeponNombre === "Charmander") {
-                            mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png')
+                            mokeponEnemigo = new Mokepon('Charmander', './assets/charmander.png', 5, 'FUEGO', './assets/charmander.png', enemigo.id)
                         }
 
-                        // console.log(mokeponEnemigo)
                         mokeponEnemigo.x = enemigo.x
                         mokeponEnemigo.y = enemigo.y
                         
@@ -547,6 +573,9 @@ function revisarColision(enemigo){
     
     detenerMovimiento()
     clearInterval(intervalo)
+    console.log("Se detecto una colision")
+    
+    enemigoId = enemigo.id
     sectionSeleccionarAtaque.style.display = 'flex'
     sectionVerMapa.style.display = 'none'
     seleccionarMascotaEnemigo(enemigo)
